@@ -1,5 +1,13 @@
 .PHONY: all clean
 
-all: g++ -lSDL2 sort.cpp -o sort.out
+CC = g++
+cflags = -lSDL2
+input = sort.cpp
 
-clean: rm -rf *.out
+all: sort.out
+
+sort.out: $(input)
+	$(CC) $(cflags) $(input) -o sort.out
+
+clean:
+	rm -rf *.out
