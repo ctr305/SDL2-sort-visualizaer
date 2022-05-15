@@ -43,7 +43,7 @@ int main(){
   for(int i=0; i<numbers.size(); i++){
     std::cout << numbers[i] << " ";
     for(int j=0; j<numbers.size(); j++){
-      if(numbers[i] < numbers[j]){
+      if(numbers[i] > numbers[j]){
         int aux1, aux2;
         aux1 = numbers[i];
         aux2 = numbers[j];
@@ -58,7 +58,7 @@ int main(){
       drawState(numbers,renderer,i,j);
 
       SDL_RenderPresent(renderer);
-      SDL_Delay(15);
+      SDL_Delay(5);
     }
   }
 
