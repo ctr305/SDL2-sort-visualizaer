@@ -6,8 +6,14 @@
 
 void drawState(std::vector<int>& numbers, SDL_Renderer* r, int red, int blue){
   int index=0;
-  for(int i = 0; i<numbers.size(); i++){
-    SDL_SetRenderDrawColor(r, 255,255,255,255);
+  for(int i : numbers){
+    if(index == red){
+      SDL_SetRenderDrawColor(r,255,0,0,255);
+    }else if(index == blue){
+      SDL_SetRenderDrawColor(r,0,0,255,255);
+    }else{
+      SDL_SetRenderDrawColor(r,255,255,255,0);
+    }
     SDL_RenderDrawLine(r,index,99,index,i);
     index++;
   }
@@ -52,7 +58,7 @@ int main(){
       drawState(numbers,renderer,i,j);
 
       SDL_RenderPresent(renderer);
-      SDL_Delay(1);
+      SDL_Delay(15);
     }
   }
 
