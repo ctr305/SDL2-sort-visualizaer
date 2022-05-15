@@ -4,6 +4,15 @@
 #include <iostream>
 #include <random>
 
+void drawState(std::vector<int>& numbers, SDL_Renderer* r, int red, int blue){
+  int index=0;
+  for(int i = 0; i<numbers.size(); i++){
+    SDL_SetRenderDrawColor(r, 255,255,255,255);
+    SDL_RenderDrawLine(r,index,99,index,i);
+    index++;
+  }
+}
+
 int main(){
 
   std::random_device r;
@@ -14,8 +23,8 @@ int main(){
     numbers.push_back(n(r));
   }
 
-  SDL_Window* window = nullptr;
-  SDL_Renderer* renderer = nullptr;
+  SDL_Window* window;
+  SDL_Renderer* renderer;
   SDL_CreateWindowAndRenderer(
                               100*10, 100*10, 0,
                               &window,&renderer);
@@ -35,6 +44,15 @@ int main(){
         numbers[i] = aux2;
         numbers[j] = aux1;
       }
+      //Clear screen
+      SDL_SetRenderDrawColor(renderer,0,0,0,255);
+      SDL_RenderClear(renderer);
+
+      //Draw state
+      drawState(numbers,renderer,i,j);
+
+      SDL_RenderPresent(renderer);
+      SDL_Delay(1);
     }
   }
 
