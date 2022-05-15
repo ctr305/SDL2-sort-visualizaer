@@ -16,4 +16,5 @@ Arguments:
 |---|---|
 |simple|Simple sorting algorithm|
 |quick|QuickSort|
+|merge|MergeSort|
 |bubble|BubbleSort|
