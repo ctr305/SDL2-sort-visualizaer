@@ -19,25 +19,7 @@ void drawState(std::vector<int>& numbers, SDL_Renderer* r, int red, int blue){
   }
 }
 
-int main(){
-
-  std::random_device r;
-  std::uniform_int_distribution<> n(1,99);
-  std::vector<int> numbers;
-
-  for(int i=0; i<100; i++){
-    numbers.push_back(n(r));
-  }
-
-  SDL_Window* window;
-  SDL_Renderer* renderer;
-  SDL_CreateWindowAndRenderer(
-                              100*10, 100*10, 0,
-                              &window,&renderer);
-  SDL_RenderSetScale(renderer,10,10);
-
-  //sorting algorithm
-
+void simpleSort(std::vector<int> numbers, SDL_Renderer* renderer){
   std::cout << "Original vector: ";
 
   for(int i=0; i<numbers.size(); i++){
@@ -60,6 +42,32 @@ int main(){
       SDL_RenderPresent(renderer);
       SDL_Delay(5);
     }
+  }
+}
+
+int main(int argc, char *argv[]){
+
+  std::random_device r;
+  std::uniform_int_distribution<> n(1,99);
+  std::vector<int> numbers;
+
+  for(int i=0; i<100; i++){
+    numbers.push_back(n(r));
+  }
+
+  SDL_Window* window;
+  SDL_Renderer* renderer;
+  SDL_CreateWindowAndRenderer(
+                              100*10, 100*10, 0,
+                              &window,&renderer);
+  SDL_RenderSetScale(renderer,10,10);
+
+  //sorting algorithm
+
+  if(argv[1] == "simple"){
+    simpleSort(numbers,renderer);
+  }else{
+    simpleSort(numbers,renderer);
   }
 
   std::cout << "\nSorted vector: ";
