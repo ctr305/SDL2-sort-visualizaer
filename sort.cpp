@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 #include <random>
+#include <string_view>
 
 void drawState(std::vector<int>& numbers, SDL_Renderer* r, int red, int blue){
   int index=0;
@@ -26,11 +27,10 @@ void simpleSort(std::vector<int> numbers, SDL_Renderer* renderer){
     std::cout << numbers[i] << " ";
     for(int j=0; j<numbers.size(); j++){
       if(numbers[i] > numbers[j]){
-        int aux1, aux2;
-        aux1 = numbers[i];
-        aux2 = numbers[j];
-        numbers[i] = aux2;
-        numbers[j] = aux1;
+        int aux;
+        aux = numbers[i];
+        numbers[i] = numbers[j];
+        numbers[j] = aux;
       }
       //Clear screen
       SDL_SetRenderDrawColor(renderer,0,0,0,255);
@@ -44,6 +44,12 @@ void simpleSort(std::vector<int> numbers, SDL_Renderer* renderer){
     }
   }
 }
+
+void quickSort(std::vector<int> numbers,SDL_Renderer* renderer);
+
+void mergeSort(std::vector<int> numbers,SDL_Renderer* renderer);
+
+void bubbleSort(std::vector<int> numbers,SDL_Renderer* renderer);
 
 int main(int argc, char *argv[]){
 
@@ -64,13 +70,23 @@ int main(int argc, char *argv[]){
 
   //sorting algorithm
 
-  if(argv[1] == "simple"){
+  if(argv[1] == std::string("simple")){
+    std::cout << "\n\nUsing simple sort";
     simpleSort(numbers,renderer);
+  }else if(argv[1] == std::string("quick")){
+    std::cout << "\n\nUsing quick sort";
+    //quickSort(numbers,renderer);
+  }else if(argv[1] == std::string("bubble")){
+    std::cout << "\n\nUsing bubble sort";
+    //bubbleSort(numbers,renderer);
   }else{
     simpleSort(numbers,renderer);
   }
 
-  std::cout << "\nSorted vector: ";
+  //Pause screen to observe sorted vector
+  SDL_Delay(1000);
+
+  std::cout << "\n\nSorted vector: ";
 
   for(int i=0; i<numbers.size(); i++){
     std::cout << numbers[i] << " ";
