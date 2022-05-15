@@ -8,4 +8,13 @@ Deleting the executable:
 `make clean`
 
 Launching the visualizer:
-`./sort.out`
+`./sort.out ARGS`
+
+Arguments:
+
+|Argument|Visualized Algorithm|
+|---|---|
+|simple|Simple sorting algorithm|
+|quick|QuickSort|
+|merge|MergeSort|
+|bubble|BubbleSort|
