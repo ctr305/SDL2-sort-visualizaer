@@ -14,7 +14,16 @@ int main(){
     numbers.push_back(n(r));
   }
 
+  SDL_Window* window = nullptr;
+  SDL_Renderer* renderer = nullptr;
+  SDL_CreateWindowAndRenderer(
+                              100*10, 100*10, 0,
+                              &window,&renderer);
+  SDL_RenderSetScale(renderer,10,10);
+
   //sorting algorithm
+
+  std::cout << "Original vector: ";
 
   for(int i=0; i<numbers.size(); i++){
     std::cout << numbers[i] << " ";
@@ -29,7 +38,7 @@ int main(){
     }
   }
 
-  std::cout << "\n";
+  std::cout << "\nSorted vector: ";
 
   for(int i=0; i<numbers.size(); i++){
     std::cout << numbers[i] << " ";
