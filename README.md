@@ -14,7 +14,8 @@ Arguments:
 
 |Argument|Visualized Algorithm|
 |---|---|
-|simple|Simple sorting algorithm|
+|NONE|Default to selection sort|
+|selection|Selection sorting algorithm|
 |quick|QuickSort|
 |merge|MergeSort|
 |bubble|BubbleSort|

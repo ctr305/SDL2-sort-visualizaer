@@ -20,7 +20,7 @@ void drawState(std::vector<int>& numbers, SDL_Renderer* r, int red, int blue){
   }
 }
 
-void simpleSort(std::vector<int> numbers, SDL_Renderer* renderer){
+void selectionSort(std::vector<int> numbers, SDL_Renderer* renderer){
   for(int i=0; i<numbers.size(); i++){
     for(int j=0; j<numbers.size(); j++){
       if(numbers[i] > numbers[j]){
@@ -67,31 +67,34 @@ int main(int argc, char *argv[]){
 
   //sorting algorithm
 
-  if(argv[1] == std::string("simple")){
-    std::cout << "\nUsing simple sort";
-    simpleSort(numbers,renderer);
-  }else if(argv[1] == std::string("quick")){
-    std::cout << "\nUsing quick sort";
-    //quickSort(numbers,renderer);
-  }else if(argv[1] == std::string("merge")){
-    std::cout << "\nUsing mergesort";
-  }else if(argv[1] == std::string("bubble")){
-    std::cout << "\nUsing bubble sort";
-    //bubbleSort(numbers,renderer);
+  if(argc == 2){
+    if(argv[1] == std::string("selection")){
+      std::cout << "\nUsing selection sort";
+      selectionSort(numbers,renderer);
+    }else if(argv[1] == std::string("quick")){
+      std::cout << "\nUsing quick sort";
+      //quickSort(numbers,renderer);
+    }else if(argv[1] == std::string("merge")){
+      std::cout << "\nUsing mergesort";
+    }else if(argv[1] == std::string("bubble")){
+      std::cout << "\nUsing bubble sort";
+      //bubbleSort(numbers,renderer);
+    }
   }else{
-    simpleSort(numbers,renderer);
+    selectionSort(numbers,renderer);
   }
 
   //Pause screen to observe sorted vector
   SDL_Delay(1000);
 
-  /*std::cout << "\n\nSorted vector: ";
+  /*
+   * std::cout << "\n\nSorted vector: ";
+   * for(int i=0; i<numbers.size(); i++){
+   * std::cout << numbers[i] << " ";
+   * }
+   */
 
-  for(int i=0; i<numbers.size(); i++){
-    std::cout << numbers[i] << " ";
-  }
-
-  std::cout << "\n";*/
+  std::cout << "\n";
 
   return 0;
 }
