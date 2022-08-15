@@ -33,7 +33,6 @@ void selectionSort(std::vector<int> numbers, SDL_Renderer* renderer){
       SDL_SetRenderDrawColor(renderer,0,0,0,255);
       SDL_RenderClear(renderer);
 
-      //Draw state
       drawState(numbers,renderer,i,j);
 
       SDL_RenderPresent(renderer);
