@@ -1,9 +1,9 @@
 //Sorting algorithm visualizer in SDL2
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_render.h>
 #include <iostream>
 #include <random>
-#include <string_view>
 
 void drawState(std::vector<int>& numbers, SDL_Renderer* r, int red, int blue){
   int index=0;
@@ -20,7 +20,7 @@ void drawState(std::vector<int>& numbers, SDL_Renderer* r, int red, int blue){
   }
 }
 
-void selectionSort(std::vector<int> numbers, SDL_Renderer* renderer){
+void renderSelectionSort(std::vector<int> numbers, SDL_Renderer* renderer){
   for(int i=0; i<numbers.size(); i++){
     for(int j=0; j<numbers.size(); j++){
       if(numbers[i] > numbers[j]){
@@ -41,11 +41,39 @@ void selectionSort(std::vector<int> numbers, SDL_Renderer* renderer){
   }
 }
 
-void quickSort(std::vector<int> numbers,SDL_Renderer* renderer);
+void renderQuickSort(std::vector<int> numbers, SDL_Renderer* renderer){
+  auto partition = [&] (std::vector<int>& numbers, int low, int high){
+    int pivot = numbers[high];
+    int i = low-1;
+    for(int j=low; j<high; j++){
+      if(numbers[j] < pivot){
+        i++;
+        std::swap(numbers[i],numbers[j]);
+      }
+      SDL_SetRenderDrawColor(renderer,0,0,0,255);
+      SDL_RenderClear(renderer);
+      drawState(numbers,renderer,i,j);
+      SDL_RenderPresent(renderer);
+      SDL_Delay(5);
+    }
+    std::swap(numbers[i+1],numbers[high]);
+    return i+1;
+  };
 
-void mergeSort(std::vector<int> numbers,SDL_Renderer* renderer);
+  auto quicksort = [&] (std::vector<int>& numbers, int low, int high, auto&& quicksort) -> void{
+    if(low < high){
+      int pi = partition(numbers,low,high);
+      quicksort(numbers,low,pi-1,quicksort);
+      quicksort(numbers,pi+1,high,quicksort);
+    }
+  };
 
-void bubbleSort(std::vector<int> numbers,SDL_Renderer* renderer);
+  quicksort(numbers,0,numbers.size()-1,quicksort);
+}
+
+void renderMergeSort(std::vector<int> numbers,SDL_Renderer* renderer);
+
+void renderBubbleSort(std::vector<int> numbers,SDL_Renderer* renderer);
 
 int main(int argc, char *argv[]){
 
@@ -69,18 +97,19 @@ int main(int argc, char *argv[]){
   if(argc == 2){
     if(argv[1] == std::string("selection")){
       std::cout << "\nUsing selection sort";
-      selectionSort(numbers,renderer);
+      renderSelectionSort(numbers,renderer);
     }else if(argv[1] == std::string("quick")){
       std::cout << "\nUsing quick sort";
-      //quickSort(numbers,renderer);
+      renderQuickSort(numbers,renderer);
     }else if(argv[1] == std::string("merge")){
       std::cout << "\nUsing mergesort";
+      //renderMergeSort(numbers,renderer);
     }else if(argv[1] == std::string("bubble")){
       std::cout << "\nUsing bubble sort";
-      //bubbleSort(numbers,renderer);
+      //renderBubbleSort(numbers,renderer);
     }
   }else{
-    selectionSort(numbers,renderer);
+    renderSelectionSort(numbers,renderer);
   }
 
   //Pause screen to observe sorted vector
