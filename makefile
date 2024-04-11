@@ -1,13 +1,13 @@
 .PHONY: all clean
 
 CC = g++
-cflags = -lSDL2
+cflags = -Wall -O2 -lSDL2
 input = sort.cpp
 
-all: sort.out
+all: sort
 
-sort.out: $(input)
-	$(CC) $(cflags) $(input) -o sort.out
+sort: $(input)
+	$(CC) $(cflags) $(input) -o sort
 
 clean:
-	rm -rf *.out
+	rm -rf sort
