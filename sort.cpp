@@ -2,6 +2,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_render.h>
+#include <SDL2/SDL_timer.h>
 #include <iostream>
 #include <random>
 
@@ -18,6 +19,21 @@ void drawState(std::vector<int>& numbers, SDL_Renderer* r, int red, int blue){
     SDL_RenderDrawLine(r,index,99,index,i);
     index++;
   }
+}
+
+void finalState(std::vector<int>& numbers, SDL_Renderer* r){
+  SDL_SetRenderDrawColor(r,0,0,0,255);
+  SDL_RenderClear(r);
+  drawState(numbers,r,-1,-1);
+  for (int i = 0; i < numbers.size(); i++) {
+    SDL_SetRenderDrawColor(r,0,0,255,255);
+    SDL_RenderDrawLine(r,i,99,i,numbers[i]);
+    SDL_RenderPresent(r);
+    SDL_Delay(5);
+    SDL_SetRenderDrawColor(r,255,255,255,255);
+    SDL_RenderDrawLine(r,i,99,i,numbers[i]);
+  }
+  SDL_Delay(5000);
 }
 
 void renderSelectionSort(std::vector<int> numbers, SDL_Renderer* renderer){
@@ -39,6 +55,7 @@ void renderSelectionSort(std::vector<int> numbers, SDL_Renderer* renderer){
       SDL_Delay(5);
     }
   }
+  finalState(numbers,renderer);
 }
 
 void renderQuickSort(std::vector<int> numbers, SDL_Renderer* renderer){
@@ -69,6 +86,7 @@ void renderQuickSort(std::vector<int> numbers, SDL_Renderer* renderer){
   };
 
   quicksort(numbers,0,numbers.size()-1,quicksort);
+  finalState(numbers,renderer);
 }
 
 void renderMergeSort(std::vector<int> numbers,SDL_Renderer* renderer){
@@ -126,6 +144,7 @@ void renderMergeSort(std::vector<int> numbers,SDL_Renderer* renderer){
   };
 
   mergesort(numbers,0,numbers.size()-1,renderer,merge,mergesort);
+  finalState(numbers,renderer);
 }
 
 void renderBubbleSort(std::vector<int> numbers,SDL_Renderer* renderer);
@@ -147,8 +166,6 @@ int main(int argc, char *argv[]){
                               &window,&renderer);
   SDL_RenderSetScale(renderer,10,10);
 
-  //sorting algorithm
-
   if(argc == 2){
     if(argv[1] == std::string("selection")){
       std::cout << "\nUsing selection sort";
@@ -162,22 +179,24 @@ int main(int argc, char *argv[]){
     }else if(argv[1] == std::string("bubble")){
       std::cout << "\nUsing bubble sort";
       //renderBubbleSort(numbers,renderer);
-    }
+    }else if(argv[1] == std::string("suite")){
+      std::cout << "\nUsing suite of sorting algorithms";
+      renderSelectionSort(numbers,renderer);
+      renderQuickSort(numbers,renderer);
+      renderMergeSort(numbers,renderer);
   }else{
     renderSelectionSort(numbers,renderer);
   }
 
-  //Pause screen to observe sorted vector
-  SDL_Delay(1000);
+  std::cout << "\n";;
 
-  /*
-   * std::cout << "\n\nSorted vector: ";
-   * for(int i=0; i<numbers.size(); i++){
-   * std::cout << numbers[i] << " ";
-   * }
-   */
+  }else{
+    renderSelectionSort(numbers,renderer);
+  }
 
-  std::cout << "\n";
+  SDL_DestroyRenderer(renderer);
+  SDL_DestroyWindow(window);
+  SDL_Quit();
 
   return 0;
 }
