@@ -71,7 +71,62 @@ void renderQuickSort(std::vector<int> numbers, SDL_Renderer* renderer){
   quicksort(numbers,0,numbers.size()-1,quicksort);
 }
 
-void renderMergeSort(std::vector<int> numbers,SDL_Renderer* renderer);
+void renderMergeSort(std::vector<int> numbers,SDL_Renderer* renderer){
+  auto merge = [&] (std::vector<int>& numbers, int left, int mid, int right, SDL_Renderer* renderer){
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    std::vector<int> L,R;
+
+    for(int i=0; i<n1; i++){
+      L.push_back(numbers[left+i]);
+    }
+    for(int j=0; j<n2; j++){
+      R.push_back(numbers[mid+1+j]);
+    }
+
+    int i=0, j=0, k=left;
+    
+    while (i < n1 && j < n2) {
+      if (L[i] <= R[j]) {
+        numbers[k] = L[i];
+        i++;
+      } else {
+        numbers[k] = R[j];
+        j++;
+      }
+      SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+      SDL_RenderClear(renderer);
+      drawState(numbers, renderer, i, j);
+      SDL_RenderPresent(renderer);
+      SDL_Delay(5);
+      k++;
+    }
+
+    while (i < n1) {
+      numbers[k] = L[i];
+      i++;
+      k++;
+    }
+
+    while (j < n2) {
+      numbers[k] = R[j];
+      j++;
+      k++;
+    }
+  };
+  
+  auto mergesort = [&] (std::vector<int>& numbers, int left, int right, SDL_Renderer* renderer, auto&& merge, auto&& mergesort) -> void{
+    if(left < right){
+      int mid = left + (right - left) / 2;
+      mergesort(numbers,left,mid,renderer,merge,mergesort);
+      mergesort(numbers,mid+1,right,renderer,merge,mergesort);
+      merge(numbers,left,mid,right,renderer);
+    }
+  };
+
+  mergesort(numbers,0,numbers.size()-1,renderer,merge,mergesort);
+}
 
 void renderBubbleSort(std::vector<int> numbers,SDL_Renderer* renderer);
 
@@ -103,7 +158,7 @@ int main(int argc, char *argv[]){
       renderQuickSort(numbers,renderer);
     }else if(argv[1] == std::string("merge")){
       std::cout << "\nUsing mergesort";
-      //renderMergeSort(numbers,renderer);
+      renderMergeSort(numbers,renderer);
     }else if(argv[1] == std::string("bubble")){
       std::cout << "\nUsing bubble sort";
       //renderBubbleSort(numbers,renderer);
