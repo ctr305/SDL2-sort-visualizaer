@@ -8,7 +8,7 @@ Deleting the executable:
 `make clean`
 
 Launching the visualizer:
-`./sort.out ARGS`
+`sort ARGS`
 
 Arguments:
 
@@ -17,5 +17,5 @@ Arguments:
 |NONE|Default to selection sort|
 |selection|Selection sorting algorithm|
 |quick|QuickSort|
-|merge|MergeSort|
-|bubble|BubbleSort|
+|merge|MergeSort **TODO**|
+|bubble|BubbleSort **TODO**|
