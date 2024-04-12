@@ -147,7 +147,21 @@ void renderMergeSort(std::vector<int> numbers,SDL_Renderer* renderer){
   finalState(numbers,renderer);
 }
 
-void renderBubbleSort(std::vector<int> numbers,SDL_Renderer* renderer);
+void renderBubbleSort(std::vector<int> numbers,SDL_Renderer* renderer){
+  for(int i=0; i<numbers.size(); i++){
+    for(int j=0; j<numbers.size(); j++){
+      if(numbers[j] > numbers[j+1]){
+        std::swap(numbers[j],numbers[j+1]);
+      }
+      SDL_SetRenderDrawColor(renderer,0,0,0,255);
+      SDL_RenderClear(renderer);
+      drawState(numbers,renderer,i,j);
+      SDL_RenderPresent(renderer);
+      SDL_Delay(5);
+    }
+  }
+  finalState(numbers,renderer);
+}
 
 int main(int argc, char *argv[]){
 
@@ -178,12 +192,13 @@ int main(int argc, char *argv[]){
       renderMergeSort(numbers,renderer);
     }else if(argv[1] == std::string("bubble")){
       std::cout << "\nUsing bubble sort";
-      //renderBubbleSort(numbers,renderer);
+      renderBubbleSort(numbers,renderer);
     }else if(argv[1] == std::string("suite")){
       std::cout << "\nUsing suite of sorting algorithms";
       renderSelectionSort(numbers,renderer);
       renderQuickSort(numbers,renderer);
       renderMergeSort(numbers,renderer);
+      renderBubbleSort(numbers,renderer);
   }else{
     renderSelectionSort(numbers,renderer);
   }
