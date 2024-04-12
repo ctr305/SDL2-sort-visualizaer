@@ -17,5 +17,6 @@ Arguments:
 |NONE|Default to selection sort|
 |selection|Selection sorting algorithm|
 |quick|QuickSort|
-|merge|MergeSort **TODO**|
-|bubble|BubbleSort **TODO**|
+|merge|MergeSort|
+|bubble|BubbleSort|
+|suite|Show all|

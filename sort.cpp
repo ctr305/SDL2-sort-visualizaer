@@ -63,7 +63,7 @@ void renderQuickSort(std::vector<int> numbers, SDL_Renderer* renderer){
     int pivot = numbers[high];
     int i = low-1;
     for(int j=low; j<high; j++){
-      if(numbers[j] < pivot){
+      if(numbers[j] > pivot){
         i++;
         std::swap(numbers[i],numbers[j]);
       }
@@ -106,7 +106,7 @@ void renderMergeSort(std::vector<int> numbers,SDL_Renderer* renderer){
     int i=0, j=0, k=left;
     
     while (i < n1 && j < n2) {
-      if (L[i] <= R[j]) {
+      if (L[i] >= R[j]) {
         numbers[k] = L[i];
         i++;
       } else {
@@ -150,7 +150,7 @@ void renderMergeSort(std::vector<int> numbers,SDL_Renderer* renderer){
 void renderBubbleSort(std::vector<int> numbers,SDL_Renderer* renderer){
   for(int i=0; i<numbers.size(); i++){
     for(int j=0; j<numbers.size(); j++){
-      if(numbers[j] > numbers[j+1]){
+      if(numbers[j] < numbers[j+1]){
         std::swap(numbers[j],numbers[j+1]);
       }
       SDL_SetRenderDrawColor(renderer,0,0,0,255);
