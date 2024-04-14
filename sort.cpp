@@ -1,14 +1,15 @@
 //Sorting algorithm visualizer in SDL2
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_render.h>
-#include <SDL2/SDL_timer.h>
 #include <iostream>
+#include <optional>
 #include <random>
+#include <memory>
+#include <algorithm>
 
 void drawState(std::vector<int>& numbers, SDL_Renderer* r, int red, int blue){
   int index=0;
-  for(int i : numbers){
+  for(const auto &i : numbers){
     if(index == red){
       SDL_SetRenderDrawColor(r,255,0,0,255);
     }else if(index == blue){
@@ -25,7 +26,7 @@ void finalState(std::vector<int>& numbers, SDL_Renderer* r){
   SDL_SetRenderDrawColor(r,0,0,0,255);
   SDL_RenderClear(r);
   drawState(numbers,r,-1,-1);
-  for (int i = 0; i < numbers.size(); i++) {
+  for (int i=0; i<numbers.size(); i++){
     SDL_SetRenderDrawColor(r,0,0,255,255);
     SDL_RenderDrawLine(r,i,99,i,numbers[i]);
     SDL_RenderPresent(r);
@@ -38,8 +39,8 @@ void finalState(std::vector<int>& numbers, SDL_Renderer* r){
 
 void renderSelectionSort(std::vector<int> numbers, SDL_Renderer* renderer){
   for(int i=0; i<numbers.size(); i++){
-    for(int j=0; j<numbers.size(); j++){
-      if(numbers[i] > numbers[j]){
+    for(int j=i+1; j<numbers.size(); j++){
+      if(numbers[i] < numbers[j]){
         int aux;
         aux = numbers[i];
         numbers[i] = numbers[j];
@@ -106,7 +107,7 @@ void renderMergeSort(std::vector<int> numbers,SDL_Renderer* renderer){
     int i=0, j=0, k=left;
     
     while (i < n1 && j < n2) {
-      if (L[i] >= R[j]) {
+      if (L[i] > R[j]) {
         numbers[k] = L[i];
         i++;
       } else {
@@ -149,7 +150,7 @@ void renderMergeSort(std::vector<int> numbers,SDL_Renderer* renderer){
 
 void renderBubbleSort(std::vector<int> numbers,SDL_Renderer* renderer){
   for(int i=0; i<numbers.size(); i++){
-    for(int j=0; j<numbers.size(); j++){
+    for(int j=0; j<numbers.size()-i-1; j++){
       if(numbers[j] < numbers[j+1]){
         std::swap(numbers[j],numbers[j+1]);
       }
@@ -165,6 +166,24 @@ void renderBubbleSort(std::vector<int> numbers,SDL_Renderer* renderer){
 
 int main(int argc, char *argv[]){
 
+  std::optional<std::string> sortType;
+
+  if(argc == 1){
+    std::cout << "\nUsage: sort [selection|quick|merge|bubble|suite]\n";
+    return 0;
+  } else {
+    if(std::string_view(argv[1]) == "selection" ||
+        std::string_view(argv[1]) == "quick" ||
+        std::string_view(argv[1]) == "merge" ||
+        std::string_view(argv[1]) == "bubble" ||
+        std::string_view(argv[1]) == "suite"){
+      sortType = argv[1];
+    }else{
+      std::cout << "\nUsage: sort [selection|quick|merge|bubble|suite]\n";
+      return 0;
+    }
+  }
+
   std::random_device r;
   std::uniform_int_distribution<> n(1,99);
   std::vector<int> numbers;
@@ -173,44 +192,54 @@ int main(int argc, char *argv[]){
     numbers.push_back(n(r));
   }
 
-  SDL_Window* window;
-  SDL_Renderer* renderer;
-  SDL_CreateWindowAndRenderer(
-                              100*10, 100*10, 0,
-                              &window,&renderer);
-  SDL_RenderSetScale(renderer,10,10);
+  if(SDL_Init(SDL_INIT_VIDEO) != 0){
+    std::cout << "Error: " << SDL_GetError() << std::endl;
+    return 1;
+  }
 
-  if(argc == 2){
-    if(argv[1] == std::string("selection")){
+  SDL_Window *win;
+  SDL_Renderer *ren;
+
+  SDL_CreateWindowAndRenderer(100 * 10, 100 * 10, 0, &win, &ren);
+
+  std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> window(
+      win, SDL_DestroyWindow);
+  std::unique_ptr<SDL_Renderer, decltype(&SDL_DestroyRenderer)> renderer(
+      ren, SDL_DestroyRenderer);
+
+  SDL_RenderSetScale(renderer.get(), 10, 10);
+
+  if(window == nullptr || renderer == nullptr){
+    std::cout << "Error: " << SDL_GetError() << std::endl;
+    return 1;
+  }
+
+  if(sortType){
+    if(*sortType == "selection"){
       std::cout << "\nUsing selection sort";
-      renderSelectionSort(numbers,renderer);
-    }else if(argv[1] == std::string("quick")){
+      renderSelectionSort(numbers,renderer.get());
+    }else if(*sortType == "quick"){
       std::cout << "\nUsing quick sort";
-      renderQuickSort(numbers,renderer);
-    }else if(argv[1] == std::string("merge")){
+      renderQuickSort(numbers,renderer.get());
+    }else if(*sortType == "merge"){
       std::cout << "\nUsing mergesort";
-      renderMergeSort(numbers,renderer);
-    }else if(argv[1] == std::string("bubble")){
+      renderMergeSort(numbers,renderer.get());
+    }else if(*sortType == "bubble"){
       std::cout << "\nUsing bubble sort";
-      renderBubbleSort(numbers,renderer);
-    }else if(argv[1] == std::string("suite")){
+      renderBubbleSort(numbers,renderer.get());
+    }else if(*sortType == "suite"){
       std::cout << "\nUsing suite of sorting algorithms";
-      renderSelectionSort(numbers,renderer);
-      renderQuickSort(numbers,renderer);
-      renderMergeSort(numbers,renderer);
-      renderBubbleSort(numbers,renderer);
-  }else{
-    renderSelectionSort(numbers,renderer);
+      renderSelectionSort(numbers,renderer.get());
+      renderQuickSort(numbers,renderer.get());
+      renderMergeSort(numbers,renderer.get());
+      renderBubbleSort(numbers,renderer.get());
+    }else{
+      renderSelectionSort(numbers,renderer.get());
+    }
+
+  std::cout << "\n";
   }
 
-  std::cout << "\n";;
-
-  }else{
-    renderSelectionSort(numbers,renderer);
-  }
-
-  SDL_DestroyRenderer(renderer);
-  SDL_DestroyWindow(window);
   SDL_Quit();
 
   return 0;
